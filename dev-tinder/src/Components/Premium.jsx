@@ -57,8 +57,26 @@ const Premium = () => {
 
     return (
         isUserPremium ? (
-            <div>
-                "You are already a premium user!!"
+            <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
+                <div className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 
+                    text-gray-900 rounded-2xl shadow-2xl p-10 w-full max-w-lg text-center">
+                    <div className="flex justify-center mb-4">
+                        <span className="text-5xl">👑</span>
+                    </div>
+                    <h2 className="text-3xl font-extrabold mb-2">
+                        You are a Premium Member!
+                    </h2>
+                    <p className="text-lg text-gray-800">
+                        Thanks for supporting <span className="font-bold">Dev Tinder</span>.
+                        Enjoy unlimited access to premium features 🚀
+                    </p>
+                    <button
+                        className="mt-6 px-6 py-2 rounded-lg bg-gray-900 text-white font-semibold hover:bg-gray-800 transition"
+                        onClick={() => window.location.href = "/"} // or redirect to dashboard
+                    >
+                        Go to Dashboard
+                    </button>
+                </div>
             </div>
         ) :
             (
