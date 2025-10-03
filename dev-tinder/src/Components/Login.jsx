@@ -1,13 +1,11 @@
-import React from 'react'
-import { useState } from 'react';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { addUser } from '../utils/userSlice';
-import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../utils/constants';
+import React, { useState } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [emailId, setEmailId] = useState("");
@@ -15,6 +13,7 @@ const Login = () => {
   const [error, setErrorMessage] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [showError, setShowError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,23 +22,15 @@ const Login = () => {
     try {
       const res = await axios.post(
         BASE_URL + "/login",
-        {
-          emailId,
-          password,
-        },
-        { withCredentials: true },
+        { emailId, password },
+        { withCredentials: true }
       );
-
-      console.log("Login", res.data);
       dispatch(addUser(res.data));
       navigate("/");
-    }
-    catch (err) {
+    } catch (err) {
       setErrorMessage(err?.response?.data || "Something went wrong");
       setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-      }, 1000);
+      setTimeout(() => setShowError(false), 2000);
     }
   };
 
@@ -47,146 +38,125 @@ const Login = () => {
     try {
       const res = await axios.post(
         BASE_URL + "/signup",
-        {
-          firstName,
-          lastName,
-          emailId,
-          password
-        },
+        { firstName, lastName, emailId, password },
         { withCredentials: true }
       );
-
       dispatch(addUser(res.data.data));
-      return navigate("/profile");
-    }
-    catch (err) {
+      navigate("/profile");
+    } catch (err) {
       setErrorMessage(err?.response?.data || "Something went wrong");
       setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-      }, 1000);
+      setTimeout(() => setShowError(false), 2000);
     }
   };
 
   return (
-    <div className="flex justify-center my-10">
-      <div className="card card-border bg-neutral w-96">
-        <div className="card-body">
-          <h2 className="card-title justify-center">
-            {
-              isLoginForm ?
-                "Login" :
-                "Sign Up"
-            }
-          </h2>
-          <div>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-black px-4">
+      <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl rounded-2xl w-full max-w-md p-8">
+        <h2 className="text-3xl font-bold text-center text-white mb-6">
+          {isLoginForm ? "Welcome Back 👋" : "Create Account ✨"}
+        </h2>
 
-            {/* Show the First Name and Last Name on the Sign Up Page Only */}
-            {
-              !isLoginForm &&
-              <>
-                {/* First Name */}
-                < div className="w-full max-w-xs my-4">
-                  <label className="form-control w-full max-w-xs my-4">
-                    <div className="label">
-                      <span className="label-text">First Name</span>
-                    </div>
-                    <input
-                      type="text"
-                      value={firstName}
-                      className="input input-bordered w-full max-w-xs"
-                      onChange={(e) => setFirstName(e.target.value)}
-                    />
-                  </label>
-                </div>
-
-                {/* Last Name */}
-                <div className="w-full max-w-xs my-4">
-                  <label className="form-control w-full max-w-xs my-4">
-                    <div className="label">
-                      <span className="label-text">Last Name</span>
-                    </div>
-                    <input
-                      type="text"
-                      value={lastName}
-                      className="input input-bordered w-full max-w-xs"
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                  </label>
-                </div>
-              </>
-            }
-
-            {/* Email Id */}
-            <div className="w-full max-w-xs my-4">
-              <label className="form-control w-full max-w-xs my-4">
-                <div className="label">
-                  <span className="label-text">Email ID</span>
-                </div>
+        <div className="space-y-4">
+          {!isLoginForm && (
+            <>
+              {/* First Name */}
+              <div>
+                <label className="block text-gray-200 mb-1">First Name</label>
                 <input
                   type="text"
-                  value={emailId}
-                  className="input input-bordered w-full max-w-xs"
-                  onChange={(e) => setEmailId(e.target.value)}
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg bg-gray-800/60 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  placeholder="Enter your first name"
                 />
-              </label>
-            </div>
+              </div>
 
-            {/* Password */}
-            <div className="w-full max-w-xs my-4">
-              <label className="form-control ">
-                <div className="label">
-                  <span className="label-text">Password</span>
-                </div>
+              {/* Last Name */}
+              <div>
+                <label className="block text-gray-200 mb-1">Last Name</label>
                 <input
-                  type="password"
-                  value={password}
-                  className="input input-bordered w-full max-w-xs"
-                  onChange={(e) => setPassword(e.target.value)}
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg bg-gray-800/60 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  placeholder="Enter your last name"
                 />
-              </label>
-            </div>
+              </div>
+            </>
+          )}
+
+          {/* Email */}
+          <div>
+            <label className="block text-gray-200 mb-1">Email ID</label>
+            <input
+              type="email"
+              value={emailId}
+              onChange={(e) => setEmailId(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg bg-gray-800/60 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              placeholder="Enter your email"
+            />
           </div>
 
-          <p className='text-red-500'>
+          {/* Password */}
+          <div>
+            <label className="block text-gray-200 mb-1">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 pr-10 rounded-lg bg-gray-800/60 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                placeholder="Enter your password"
+              />
+              {/* Eye icon */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-white cursor-pointer"
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Error */}
+        {showError && (
+          <div className="mt-4 text-red-400 text-sm font-medium text-center">
             {error}
-          </p>
+          </div>
+        )}
 
-          <p className="cursor-pointer" onClick={() => setIsLoginForm(!isLoginForm)}>
-            {isLoginForm ? "New User? Sign Up" : "Existing User? Login"}
-          </p>
+        {/* Switch */}
+        <p
+          className="text-indigo-300 text-sm mt-4 text-center cursor-pointer hover:underline"
+          onClick={() => setIsLoginForm(!isLoginForm)}
+        >
+          {isLoginForm ? "New User? Sign Up" : "Existing User? Login"}
+        </p>
 
-          {isLoginForm &&
-            <div>
-              {/* Login Button */}
-              <div className="card-actions justify-center m-2">
-                <button className="btn btn-primary cursor-pointer" onClick={handleLogin}>Login</button>
-              </div>
-            </div>
-          }
-
-          {!isLoginForm &&
-            <div>
-              {/* Sign Up Button */}
-              < div className="card-actions justify-center m-2">
-                <button className="btn btn-secondary cursor-pointer" onClick={handleSignUp}>Sign Up</button>
-              </div>
-            </div>
-          }
+        {/* Buttons */}
+        <div className="mt-6">
+          {isLoginForm ? (
+            <button
+              onClick={handleLogin}
+              className="w-full py-3 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold shadow-md hover:from-indigo-600 hover:to-purple-700 transition cursor-pointer"
+            >
+              Login
+            </button>
+          ) : (
+            <button
+              onClick={handleSignUp}
+              className="w-full py-3 rounded-lg bg-gradient-to-r from-pink-500 to-rose-600 text-white font-bold shadow-md hover:from-pink-600 hover:to-rose-700  cursor-pointer transition"
+            >
+              Sign Up
+            </button>
+          )}
         </div>
       </div>
+    </div>
+  );
+};
 
-
-      {
-        showError &&
-        <div className="toast toast-top toast-start">
-          <div className="alert alert-error">
-            <span>{error}</span>
-          </div>
-        </div>
-      }
-    </div >
-  )
-}
-
-export default Login
+export default Login;
